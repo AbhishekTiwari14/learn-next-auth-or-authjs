@@ -7,19 +7,32 @@ app/api/auth/[...nextauth]/route.ts:
     export const { GET, POST } = handlers
 
 src->auth.ts:
--> providers: 
-    - Different ways to signIn: Credentials(email, password), sign in with Google,twitter,github,etc. (Credentials wala chod ke baki sab bahut simple hain)
-    - Sign In with google: In src-auth.ts:
+-> Providers:
+    -> credentials:
+        - Different ways to signIn: Credentials(email, password), sign in with Google,twitter,github,etc. (Credentials wala chod ke baki sab bahut simple hain)
+        - Sign In with google & sign in with credentials: In src->auth.ts:
+        import NextAuth from "next-auth"
+        import Credentials from "next-auth/providers/credentials" 
         import Google from "next-auth/providers/google"
+
+        export const { handlers, signIn, signOut, auth } = NextAuth({
         providers: [
-        Google({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        }),
-        //where client id & client secret can be accessed from
-    - Sign In with Credentials: 
+            Google({
+                clientId: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET, 
+                //where client id & client secret can be accessed from
+            }),
+            Credentials({
+                credentials: {
+                email: {label: "Email", type: "email", },
+                password: {label: "Password", type: "password"},
+                }
+            })
+        ],
+        })
 
-
+    -> authorize:
+        -  
 
 src->middleware.ts:
     export { auth as middleware } from "@/auth"
